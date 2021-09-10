@@ -413,6 +413,9 @@ def cornersHeuristic(state, problem):
     corners = problem.corners  # These are the corner coordinates
     # These are the walls of the maze, as a Grid (game.py)
     walls = problem.walls
+    "*** YOUR CODE HERE ***"
+    """print("Current hValue set", hValue)
+    print("Current hValue being returned ", hValue[len(hValue) - 1])"""
     position = state[0]
     cornersLeft = state[1]
     cornersLeftToCalculate = []
@@ -438,10 +441,7 @@ def cornersHeuristic(state, problem):
         cornersLeftToCalculate.remove(closestCorner)
 
     print(closestCorner)
-    "*** YOUR CODE HERE ***"
-    """print("Current hValue set", hValue)
-    print("Current hValue being returned ", hValue[len(hValue) - 1])"""
-    return hValueAccum  # Default to trivial solution
+    return hValueAccum
 
 
 class AStarCornersAgent(SearchAgent):
@@ -545,7 +545,30 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    foodPiecesLeftToCalculate = []
+
+    for piece in foodGrid.asList():
+        foodPiecesLeftToCalculate.append(piece)
+
+    print(foodPiecesLeftToCalculate)
+
+    hValueAccum = 0
+    while foodPiecesLeftToCalculate:
+        hValue = []
+        for piece in foodPiecesLeftToCalculate:
+            distanceToFood = util.manhattanDistance(position, piece)
+            hValue.append((distanceToFood, (piece)))
+
+        hValue.sort()
+        print("hValue: ", hValue)
+        closestFoodDistance = hValue[0][0]
+        closestFood = hValue[0][1]
+        position = closestFood
+        hValueAccum += closestFoodDistance
+        foodPiecesLeftToCalculate.remove(closestFood)
+        print("Closest Food: ", closestFood)
+    print("total hvalue: ", hValueAccum)
+    return hValueAccum
 
 
 class ClosestDotSearchAgent(SearchAgent):

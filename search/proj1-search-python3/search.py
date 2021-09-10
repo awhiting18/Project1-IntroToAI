@@ -213,7 +213,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    stateQueue = PriorityQueue()
+    stateQueue = util.PriorityQueue()
     visited = []
 
     if problem.isGoalState(problem.getStartState()):
@@ -221,13 +221,12 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     answer = []
     startNode = (problem.getStartState(), answer, 0)
-    stateQueue.put((0, startNode))
+    stateQueue.push(startNode, 0)
 
-    while not stateQueue.empty():
+    while not stateQueue.isEmpty():
 
         """Step 1. remove the node from the stack as well as the path we took to get there"""
-        dequeueOutput = stateQueue.get()
-        currentState = dequeueOutput[1]
+        currentState = stateQueue.pop()
         currentNode = currentState[0]
         answer = currentState[1]
         currentCost = currentState[2]
@@ -244,11 +243,12 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             """Have we seen this node before?"""
             if successor not in visited:
                 updatedAnswerPath = answer + [direction]
-                updatedCost = currentCost + cost
-                updatedF = updatedCost + heuristic(successor, problem)
-                state = (successor, updatedAnswerPath, updatedCost)
-                stateQueue.put(
-                    (updatedF, state))
+                updatedG = currentCost + cost
+                updatedH = heuristic(successor, problem)
+                updatedF = updatedG + updatedH
+                updatedState = (successor, updatedAnswerPath, updatedG)
+                stateQueue.push(
+                    updatedState, updatedF)
                 visited.append(successor)
 
 
