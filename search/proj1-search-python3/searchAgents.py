@@ -413,9 +413,35 @@ def cornersHeuristic(state, problem):
     corners = problem.corners  # These are the corner coordinates
     # These are the walls of the maze, as a Grid (game.py)
     walls = problem.walls
+    position = state[0]
+    cornersLeft = state[1]
+    cornersLeftToCalculate = []
 
+    for corner in cornersLeft:
+        cornersLeftToCalculate.append(corner)
+
+    print(cornersLeftToCalculate)
+
+    hValueAccum = 0
+    while cornersLeftToCalculate:
+        hValue = []
+        for corner in cornersLeftToCalculate:
+            distanceToCorner = util.manhattanDistance(position, corner)
+            hValue.append((distanceToCorner, (corner)))
+            print("Hvalue ", hValue)
+
+        hValue.sort()
+        closestCornerDistance = hValue[0][0]
+        closestCorner = hValue[0][1]
+        position = closestCorner
+        hValueAccum += closestCornerDistance
+        cornersLeftToCalculate.remove(closestCorner)
+
+    print(closestCorner)
     "*** YOUR CODE HERE ***"
-    return 0  # Default to trivial solution
+    """print("Current hValue set", hValue)
+    print("Current hValue being returned ", hValue[len(hValue) - 1])"""
+    return hValueAccum  # Default to trivial solution
 
 
 class AStarCornersAgent(SearchAgent):

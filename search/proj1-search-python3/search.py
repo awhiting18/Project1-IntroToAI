@@ -244,9 +244,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             """Have we seen this node before?"""
             if successor not in visited:
                 updatedAnswerPath = answer + [direction]
-                updatedF = currentCost + cost + heuristic(successor, problem)
+                updatedCost = currentCost + cost
+                updatedF = updatedCost + heuristic(successor, problem)
                 stateQueue.put(
-                    (cost, (successor, updatedAnswerPath, updatedF)))
+                    (updatedF, (successor, updatedAnswerPath, updatedCost)))
 
 
 # Abbreviations
