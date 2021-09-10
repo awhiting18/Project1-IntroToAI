@@ -231,7 +231,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         currentNode = currentState[0]
         answer = currentState[1]
         currentCost = currentState[2]
-        visited.append(currentNode)
+        """visited.append(currentNode)"""
 
         """We ask ourselves if our current node is the goal state. If it is we return answer and
         if not we continue"""
@@ -246,8 +246,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 updatedAnswerPath = answer + [direction]
                 updatedCost = currentCost + cost
                 updatedF = updatedCost + heuristic(successor, problem)
+                state = (successor, updatedAnswerPath, updatedCost)
                 stateQueue.put(
-                    (updatedF, (successor, updatedAnswerPath, updatedCost)))
+                    (updatedF, state))
+                visited.append(successor)
 
 
 # Abbreviations
