@@ -312,11 +312,6 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        corner0, corner1, corner2, corner3 = False
-        self.cornerAccessedCollection = ((self.corners[0], corner0), (
-            self.corners[1], corner1), (self.corners[2], corner2), (self.corners[3], corner3))
-        self.startState = (self.startingPosition,
-                           self.cornerAccessedCollection)
 
         # For display purposes
         self._visited, self._visitedlist, self._expanded = {}, [], 0  # DO NOT CHANGE
@@ -327,14 +322,29 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return self.startState
+        print("Gave start state")
+        return (((self.startingPosition), self.corners))
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        corners = list(state[1])
+        print("Corners in goal state check ", corners)
+        currentNode = state[0]
+
+        if currentNode in self.corners:
+            if currentNode in corners:
+                corners.remove(currentNode)
+                print("corners Left ", corners)
+
+            print("length of corners", len(corners))
+
+            return len(corners) == 0
+        else:
+            return False
 
     def getSuccessors(self, state):
         """
@@ -348,6 +358,9 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
+        currentPosition = state[0]
+        x, y = currentPosition
+        corners = list(state[1])
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -357,6 +370,14 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                nextLocation = (nextx, nexty)
+                if currentPosition in corners:
+                    corners.remove(currentPosition)
+                successors.append(((nextLocation, corners), action, 1))
 
         self._expanded += 1  # DO NOT CHANGE
         return successors

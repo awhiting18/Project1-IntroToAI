@@ -130,36 +130,35 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    stateQueue = util.Queue()
-    directionalAccumulationQueue = util.Queue()
+    nodeQueue = util.Queue()
     visited = []
+    answer = []
 
     if problem.isGoalState(problem.getStartState()):
         return []
 
-    stateQueue.push(problem.getStartState())
-    directionalAccumulationQueue.push([])
+    nodeQueue.push((problem.getStartState(), answer))
 
-    while not stateQueue.isEmpty():
+    while not nodeQueue.isEmpty():
 
         """Step 1. remove the node from the stack as well as the path we took to get there"""
-        currentNode = stateQueue.pop()
-        answer = directionalAccumulationQueue.pop()
+        currentState = nodeQueue.pop()
+        currentNode = currentState[0]
+        currentAnswer = currentState[1]
         visited.append(currentNode)
 
         """We ask ourselves if our current node is the goal state. If it is we return answer and
         if not we continue"""
         if problem.isGoalState(currentNode):
-            return answer
+            return currentAnswer
 
         """We now check the successors of the current node and add them to the stack for checking later"""
-        for successor in problem.getSuccessors(currentNode):
+        for successor, direction, cost in problem.getSuccessors(currentNode):
 
             """Have we seen this node before?"""
-            if successor[0] not in visited:
-                stateQueue.push(successor[0])
-                updatedAnswerPath = answer + [successor[1]]
-                directionalAccumulationQueue.push(updatedAnswerPath)
+            if successor not in visited:
+                updatedAnswerPath = currentAnswer + [direction]
+                nodeQueue.push((successor, updatedAnswerPath))
 
 
 def uniformCostSearch(problem):
