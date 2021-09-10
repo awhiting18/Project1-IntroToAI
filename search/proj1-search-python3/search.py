@@ -145,7 +145,7 @@ def breadthFirstSearch(problem):
         currentState = nodeQueue.pop()
         currentNode = currentState[0]
         currentAnswer = currentState[1]
-        visited.append(currentNode)
+        """visited.append(currentNode)"""
 
         """We ask ourselves if our current node is the goal state. If it is we return answer and
         if not we continue"""
@@ -159,6 +159,7 @@ def breadthFirstSearch(problem):
             if successor not in visited:
                 updatedAnswerPath = currentAnswer + [direction]
                 nodeQueue.push((successor, updatedAnswerPath))
+                visited.append(successor)
 
 
 def uniformCostSearch(problem):

@@ -322,7 +322,6 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        print("Gave start state")
         return (((self.startingPosition), self.corners))
 
     def isGoalState(self, state):
@@ -332,15 +331,11 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
 
         corners = list(state[1])
-        print("Corners in goal state check ", corners)
         currentNode = state[0]
 
         if currentNode in self.corners:
             if currentNode in corners:
                 corners.remove(currentNode)
-                print("corners Left ", corners)
-
-            print("length of corners", len(corners))
 
             return len(corners) == 0
         else:
@@ -361,6 +356,8 @@ class CornersProblem(search.SearchProblem):
         currentPosition = state[0]
         x, y = currentPosition
         corners = list(state[1])
+        if currentPosition in corners:
+            corners.remove(currentPosition)
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -375,8 +372,10 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 nextLocation = (nextx, nexty)
-                if currentPosition in corners:
-                    corners.remove(currentPosition)
+                """if nextLocation in corners:
+                    print("In a corner")
+                    corners.remove(nextLocation)
+                    print("Removed Corner ", corners)"""
                 successors.append(((nextLocation, corners), action, 1))
 
         self._expanded += 1  # DO NOT CHANGE
