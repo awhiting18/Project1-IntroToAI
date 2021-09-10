@@ -423,15 +423,12 @@ def cornersHeuristic(state, problem):
     for corner in cornersLeft:
         cornersLeftToCalculate.append(corner)
 
-    print(cornersLeftToCalculate)
-
     hValueAccum = 0
     while cornersLeftToCalculate:
         hValue = []
         for corner in cornersLeftToCalculate:
             distanceToCorner = util.manhattanDistance(position, corner)
             hValue.append((distanceToCorner, (corner)))
-            print("Hvalue ", hValue)
 
         hValue.sort()
         closestCornerDistance = hValue[0][0]
@@ -439,8 +436,6 @@ def cornersHeuristic(state, problem):
         position = closestCorner
         hValueAccum += closestCornerDistance
         cornersLeftToCalculate.remove(closestCorner)
-
-    print(closestCorner)
     return hValueAccum
 
 
@@ -550,8 +545,6 @@ def foodHeuristic(state, problem):
     for piece in foodGrid.asList():
         foodPiecesLeftToCalculate.append(piece)
 
-    print(foodPiecesLeftToCalculate)
-
     hValueAccum = 0
     while foodPiecesLeftToCalculate:
         hValue = []
@@ -560,14 +553,11 @@ def foodHeuristic(state, problem):
             hValue.append((distanceToFood, (piece)))
 
         hValue.sort()
-        print("hValue: ", hValue)
         closestFoodDistance = hValue[0][0]
         closestFood = hValue[0][1]
         position = closestFood
         hValueAccum += closestFoodDistance
         foodPiecesLeftToCalculate.remove(closestFood)
-        print("Closest Food: ", closestFood)
-    print("total hvalue: ", hValueAccum)
     return hValueAccum
 
 
@@ -603,7 +593,8 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        from search import uniformCostSearch
+        return uniformCostSearch(problem)
 
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -640,7 +631,9 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x, y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        goalState = (x, y) in self.food.asList()
+
+        return goalState
 
 
 def mazeDistance(point1, point2, gameState):
