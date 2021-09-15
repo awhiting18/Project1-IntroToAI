@@ -136,6 +136,8 @@ def breadthFirstSearch(problem):
 
     nodeQueue.push((problem.getStartState(), answer))
 
+    visited.append(problem.getStartState())
+
     while not nodeQueue.isEmpty():
 
         """Step 1. remove the node from the stack as well as the path we took to get there"""
@@ -163,40 +165,44 @@ def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
 
-    stateQueue = PriorityQueue()
+    stateQueue = util.PriorityQueue()
     visited = []
+    answer = []
 
     if problem.isGoalState(problem.getStartState()):
-        return []
+        return answer
 
-    answer = []
     startNode = (problem.getStartState(), answer, 0)
-    stateQueue.put((0, startNode))
+    stateQueue.push(startNode, 0)
+    """visited.append(problem.getStartState())"""
 
-    while not stateQueue.empty():
+    while not stateQueue.isEmpty():
 
         """Step 1. remove the node from the stack as well as the path we took to get there"""
-        dequeueOutput = stateQueue.get()
-        currentState = dequeueOutput[1]
+        currentState = stateQueue.pop()
         currentNode = currentState[0]
         answer = currentState[1]
         currentCost = currentState[2]
-        visited.append(currentNode)
+        if currentNode not in visited:
+            visited.append(currentNode)
 
-        """We ask ourselves if our current node is the goal state. If it is we return answer and
-        if not we continue"""
-        if problem.isGoalState(currentNode):
-            return answer
+            """We ask ourselves if our current node is the goal state. If it is we return answer and
+            if not we continue"""
+            if problem.isGoalState(currentNode):
+                return answer
 
-        """We now check the successors of the current node and add them to the stack for checking later"""
-        for successor, direction, cost in problem.getSuccessors(currentNode):
+            """We now check the successors of the current node and add them to the stack for checking later"""
+            for successor, direction, cost in problem.getSuccessors(currentNode):
 
-            """Have we seen this node before?"""
-            if successor not in visited:
-                updatedAnswerPath = answer + [direction]
-                updatedCost = currentCost + cost
-                stateQueue.put(
-                    (updatedCost, (successor, updatedAnswerPath, updatedCost)))
+                """Have we seen this node before?"""
+                if successor not in visited:
+                    updatedAnswerPath = answer + [direction]
+                    updatedG = currentCost + cost
+
+                    updatedState = (successor, updatedAnswerPath, updatedG)
+                    stateQueue.push(
+                        updatedState, updatedG)
+                    """visited.append(successor)"""
 
 
 def nullHeuristic(state, problem=None):
@@ -227,26 +233,27 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         currentNode = currentState[0]
         answer = currentState[1]
         currentCost = currentState[2]
-        """visited.append(currentNode)"""
+        if currentNode not in visited:
+            visited.append(currentNode)
 
-        """We ask ourselves if our current node is the goal state. If it is we return answer and
-        if not we continue"""
-        if problem.isGoalState(currentNode):
-            return answer
+            """We ask ourselves if our current node is the goal state. If it is we return answer and
+            if not we continue"""
+            if problem.isGoalState(currentNode):
+                return answer
 
-        """We now check the successors of the current node and add them to the stack for checking later"""
-        for successor, direction, cost in problem.getSuccessors(currentNode):
+            """We now check the successors of the current node and add them to the stack for checking later"""
+            for successor, direction, cost in problem.getSuccessors(currentNode):
 
-            """Have we seen this node before?"""
-            if successor not in visited:
-                updatedAnswerPath = answer + [direction]
-                updatedG = currentCost + cost
-                updatedH = heuristic(successor, problem)
-                updatedF = updatedG + updatedH
-                updatedState = (successor, updatedAnswerPath, updatedG)
-                stateQueue.push(
-                    updatedState, updatedF)
-                visited.append(successor)
+                """Have we seen this node before?"""
+                if successor not in visited:
+                    updatedAnswerPath = answer + [direction]
+                    updatedG = currentCost + cost
+                    updatedH = heuristic(successor, problem)
+                    updatedF = updatedG + updatedH
+                    updatedState = (successor, updatedAnswerPath, updatedG)
+                    stateQueue.push(
+                        updatedState, updatedF)
+                    """visited.append(successor)"""
 
 
 # Abbreviations

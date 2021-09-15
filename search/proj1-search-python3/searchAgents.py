@@ -10,6 +10,7 @@
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
+# This project was completed by AJ Whiting and Hideaki Arimoto in the 2021 Fall Semester
 
 
 """
@@ -546,7 +547,7 @@ def foodHeuristic(state, problem):
         foodPiecesLeftToCalculate.append(piece)
 
     hValueAccum = 0
-    while foodPiecesLeftToCalculate:
+    """while foodPiecesLeftToCalculate:
         hValue = []
         for piece in foodPiecesLeftToCalculate:
             distanceToFood = util.manhattanDistance(position, piece)
@@ -557,7 +558,23 @@ def foodHeuristic(state, problem):
         closestFood = hValue[0][1]
         position = closestFood
         hValueAccum += closestFoodDistance
+        foodPiecesLeftToCalculate.remove(closestFood)"""
+    hValue = []
+    for piece in foodPiecesLeftToCalculate:
+        distanceToFood = util.manhattanDistance(position, piece)
+        hValue.append((distanceToFood, (piece)))
+
+    hValue.sort()
+    if hValue:
+        closestFoodDistance = hValue[0][0]
+        closestFood = hValue[0][1]
         foodPiecesLeftToCalculate.remove(closestFood)
+        farthestFood = hValue[0][len(hValue[0]) - 1]
+        distanceBetweenClosestAndFarthestFood = util.manhattanDistance(
+            closestFood, farthestFood)
+        hValueAccum = closestFoodDistance + distanceBetweenClosestAndFarthestFood
+
+    """print("H value returned", hValueAccum)"""
     return hValueAccum
 
 
